@@ -1,18 +1,18 @@
 package com.trs.locus;
 
-import com.trs.locus.airplane.AirGraphDataBuilder;
-import com.trs.locus.airplane.AirSchemaFactory;
-import com.trs.locus.airplane.KgAirSchemaFactory;
-import com.trs.locus.airplane.TrsAirGraphDataBuilder;
-import com.trs.locus.bo.AirBO;
+import com.trs.locus.business.airplane.AirGraphDataBuilder;
+import com.trs.locus.business.airplane.AirSchemaFactory;
+import com.trs.locus.business.airplane.bo.AirBO;
+import com.trs.locus.core.GraphDataBuilder;
 import com.trs.locus.core.TaskProcess;
 import com.trs.locus.loaddata.CsvReadDataIterator;
 import com.trs.locus.loaddata.ReadData;
-import com.trs.locus.metadata.GraphDataBuilder;
 import com.trs.locus.metadata.SchemaFactory;
 import com.trs.locus.metadata.TrsGraphSchemaFactory;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import java.util.function.Function;
 
 /**
  * @Description
@@ -34,9 +34,11 @@ public class GraphImportApp {
         SchemaFactory schemaFactory = new AirSchemaFactory(graphSchemaFactory);
         GraphDataBuilder builder = new AirGraphDataBuilder();
 //        SchemaFactory schemaFactory = new KgAirSchemaFactory(graphSchemaFactory);
-//        GraphDataBuilder builder = new TrsAirGraphDataBuilder();
-        ReadData<AirBO> readData = new CsvReadDataIterator(pathName);
+//        GraphDataTaskBuilder builder = new TrsAirGraphDataBuilder();
+        Function<String, AirBO> conversion = (String line) -> AirBO.stringToAirBO(line);
+        ReadData<AirBO> readData = new CsvReadDataIterator(pathName,conversion);
         TaskProcess taskProcess = new TaskProcess(schemaFactory,builder,readData);
+//        TaskProcess taskProcess = new ConcurrentTaskProcess(schemaFactory,builder,readData);
         taskProcess.process();
         log.info("数据导入任务完成");
     }

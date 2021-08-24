@@ -3,6 +3,8 @@ package com.trs.query;
 import org.apache.tinkerpop.gremlin.driver.Client;
 import org.apache.tinkerpop.gremlin.driver.Cluster;
 import org.apache.tinkerpop.gremlin.driver.ResultSet;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * @Description
@@ -11,7 +13,7 @@ import org.apache.tinkerpop.gremlin.driver.ResultSet;
  **/
 
 public class QueryClient {
-
+   private static final Logger log = LoggerFactory.getLogger(QueryClient.class);
     private static final QueryClient INSTANCE = new QueryClient();
     private String filename = "graph.yml";
     private static  Client client;
@@ -36,6 +38,7 @@ public class QueryClient {
 
 
     public ResultSet submit(String dsl){
+        log.info("query dsl : {}",dsl);
         ResultSet submit = getInstance().getGraphClient().submit(dsl);
         return submit;
     }

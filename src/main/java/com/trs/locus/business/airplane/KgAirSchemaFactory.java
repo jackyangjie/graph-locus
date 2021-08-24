@@ -1,7 +1,10 @@
-package com.trs.locus.airplane;
+package com.trs.locus.business.airplane;
 
 import com.google.common.collect.Lists;
-import com.trs.locus.metadata.*;
+import com.trs.locus.metadata.GraphIndex;
+import com.trs.locus.metadata.Property;
+import com.trs.locus.metadata.TrsGraphSchemaFactory;
+import com.trs.locus.metadata.VertexIndex;
 import org.apache.tinkerpop.gremlin.structure.Vertex;
 
 import java.util.List;

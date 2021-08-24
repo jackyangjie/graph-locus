@@ -1,11 +1,11 @@
 package com.trs.locus.core;
 
 import com.trs.locus.loaddata.ReadData;
-import com.trs.locus.metadata.GraphDataBuilder;
 import com.trs.locus.metadata.SchemaFactory;
 import com.trs.locus.metadata.TrsGraphFactory;
+import org.apache.tinkerpop.gremlin.process.traversal.dsl.graph.GraphTraversalSource;
+import org.apache.tinkerpop.gremlin.structure.Transaction;
 import org.janusgraph.core.JanusGraph;
-import org.janusgraph.core.JanusGraphTransaction;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -22,12 +22,12 @@ public class TaskProcess {
 
     private static final Logger log = LoggerFactory.getLogger(TaskProcess.class);
 
-    private SchemaFactory schemaFactory;
-    private ReadData<?> readData;
+    protected SchemaFactory schemaFactory;
+    protected ReadData<?> readData;
 
-    private final long TX_BATCH_SIZE = 2000;
+    protected final int TX_BATCH_SIZE = 2000;
 
-    private GraphDataBuilder graphDataBuilder;
+    protected GraphDataBuilder graphDataBuilder;
 
     public TaskProcess(SchemaFactory schemaFactory, GraphDataBuilder graphDataBuilder, ReadData<?> readData) {
         this.schemaFactory = schemaFactory;
@@ -49,23 +49,17 @@ public class TaskProcess {
         schemaFactory.updateIndexStatus();
     }
 
-    private void importData(){
+    protected void importData(){
         JanusGraph graphInstance = TrsGraphFactory.getGraphInstance();
+        GraphTraversalSource traversal = graphInstance.traversal();
+        GraphData graphData =  graphDataBuilder.builder(traversal);
+        Transaction tx = traversal.tx();
 
-        GraphData graphData = null;
-        JanusGraphTransaction janusGraphTransaction = null;
         long count = 0;
         Instant start = Instant.now();
         while (readData.hasNext()){
             Object data = readData.next();
-            if ( graphData == null ){
-                janusGraphTransaction = graphInstance.newTransaction();
-//                graphData = new AirGraphDataTx(janusGraphTransaction);
-                graphData = graphDataBuilder.builder(janusGraphTransaction);
-//                graphData = new TrsAirGraphDataTx(janusGraphTransaction);
-            }
             count ++;
-
             try {
                 graphData.createGraphElement(data);
             } catch (Exception e) {
@@ -73,16 +67,16 @@ public class TaskProcess {
                 e.printStackTrace();
             }
             if (count % TX_BATCH_SIZE == 0){
-                janusGraphTransaction.commit();
+                tx.commit();
+                tx = traversal.tx();
                 Instant end = Instant.now();
                 log.info("当前已经写入的数据量："+count +" ，用时:"+ Duration.between(start,end).toMillis() +"毫秒");
                 start = end;
-                graphData = null;
+//                graphData = null;
             }
-
         }
-        if (graphData != null && janusGraphTransaction != null){
-            janusGraphTransaction.commit();
+        if (graphData != null ){
+            tx.commit();
             log.info("当前已经写入的数据量："+count +" ，用时:"+ Duration.between(start,Instant.now()).toMillis() +"毫秒");
         }
     }

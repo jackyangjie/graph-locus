@@ -1,8 +1,8 @@
 package com.trs.locus.loaddata;
 
-import com.trs.locus.bo.AirBO;
 
 import java.io.*;
+import java.util.function.Function;
 
 /**
  * @Description
@@ -10,16 +10,19 @@ import java.io.*;
  * @Author yangjie
  **/
 
-public class CsvReadDataIterator implements ReadData<AirBO> {
+public class CsvReadDataIterator<T> implements ReadData<T> {
 
     private String pathname;
 
     private BufferedReader br;
 
-    private AirBO current;
+    private T current;
 
-    public CsvReadDataIterator(String pathname) {
+    private Function<String,T> conversion;
+
+    public CsvReadDataIterator(String pathname,Function<String,T> conversion) {
         this.pathname = pathname;
+        this.conversion = conversion;
     }
 
     public void initCsvReadDataIterator(){
@@ -45,7 +48,7 @@ public class CsvReadDataIterator implements ReadData<AirBO> {
             String line = br.readLine();
             if (line != null) {
                 line = line.replaceAll("\"","");
-                current = AirBO.stringToAirBO(line);
+                current = conversion.apply(line);
                 return true;
             }
         } catch (IOException e) {
@@ -55,7 +58,7 @@ public class CsvReadDataIterator implements ReadData<AirBO> {
     }
 
     @Override
-    public AirBO next() {
+    public T next() {
         return current;
 
     }

@@ -1,8 +1,7 @@
-package com.trs.locus.bo;
+package com.trs.locus.business.airplane.bo;
 
 import com.trs.locus.DateUtil;
 
-import java.time.LocalDate;
 import java.util.Date;
 
 /**

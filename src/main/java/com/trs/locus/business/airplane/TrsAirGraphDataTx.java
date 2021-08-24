@@ -1,18 +1,15 @@
-package com.trs.locus.airplane;
+package com.trs.locus.business.airplane;
 
 import com.google.common.collect.Lists;
-import com.trs.locus.bo.AirBO;
+import com.trs.locus.business.airplane.bo.AirBO;
 import com.trs.locus.core.GraphData;
 import org.apache.commons.lang3.StringUtils;
-import org.apache.tinkerpop.gremlin.process.traversal.dsl.graph.GraphTraversal;
 import org.apache.tinkerpop.gremlin.process.traversal.dsl.graph.GraphTraversalSource;
 import org.apache.tinkerpop.gremlin.structure.Edge;
 import org.apache.tinkerpop.gremlin.structure.Element;
 import org.apache.tinkerpop.gremlin.structure.T;
 import org.apache.tinkerpop.gremlin.structure.Vertex;
-import org.janusgraph.core.JanusGraphEdge;
 import org.janusgraph.core.JanusGraphTransaction;
-import org.janusgraph.core.JanusGraphVertex;
 import org.janusgraph.graphdb.idmanagement.IDManager;
 import org.janusgraph.graphdb.transaction.StandardJanusGraphTx;
 
@@ -29,7 +26,7 @@ public class TrsAirGraphDataTx implements GraphData<AirBO> {
     private  JanusGraphTransaction janusGraphTransaction;
     private GraphTraversalSource traversal;
 
-    public TrsAirGraphDataTx(JanusGraphTransaction janusGraphTransaction) {
+    public TrsAirGraphDataTx(GraphTraversalSource traversal) {
         this.janusGraphTransaction = janusGraphTransaction;
         this.traversal = janusGraphTransaction.traversal();
     }

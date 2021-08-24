@@ -1,8 +1,7 @@
-package com.trs.locus.airplane;
+package com.trs.locus.business.airplane;
 
 import com.google.common.collect.Lists;
 import com.trs.locus.metadata.*;
-import org.apache.commons.lang3.tuple.Pair;
 import org.apache.commons.lang3.tuple.Triple;
 import org.apache.tinkerpop.gremlin.process.traversal.Order;
 import org.apache.tinkerpop.gremlin.structure.Direction;
@@ -79,9 +78,9 @@ public class AirSchemaFactory implements SchemaFactory {
         GraphIndex name_Graph_index = GraphIndex.newInstance(name_index, Vertex.class, Lists.newArrayList(NAME_PROPERTY), GraphIndex.IndexType.Composite);
 
         GraphIndex flightNo_Graph_index = GraphIndex.newInstance(flight_no_index, Vertex.class, Lists.newArrayList(FLIGHTNO_PROPERTY), GraphIndex.IndexType.Composite);
-        GraphIndex flightEvent_Graph_index = GraphIndex.newInstance(flight_event_index, Vertex.class, Lists.newArrayList(SFZH_PROPERTY,FLIGHTNO_PROPERTY,FLIGHTDAY_PROPERTY), GraphIndex.IndexType.Composite);
+        GraphIndex flightEvent_Graph_index = GraphIndex.newInstance(flight_event_index, Vertex.class, Lists.newArrayList(FLIGHTNO_PROPERTY,FLIGHTDAY_PROPERTY), GraphIndex.IndexType.Composite);
 
-        GraphIndex flightDay_Graph_index = GraphIndex.newInstance(flight_day_index, Vertex.class, Lists.newArrayList(FLIGHTDAY_PROPERTY), GraphIndex.IndexType.Mixed);
+        GraphIndex flightDay_Graph_index = GraphIndex.newInstance(flight_day_index, Vertex.class, Lists.newArrayList(FLIGHTDAY_PROPERTY), GraphIndex.IndexType.Composite);
         List<GraphIndex> indices = Lists.newArrayList(sfz_Graph_index, flightDay_Graph_index,flightEvent_Graph_index, flightNo_Graph_index);
        return indices;
     }
