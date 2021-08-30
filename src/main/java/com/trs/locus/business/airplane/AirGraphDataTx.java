@@ -60,13 +60,13 @@ public class AirGraphDataTx implements GraphData<AirBO> {
     }
 
     private Vertex query(String label,String key,String value){
-        Vertex vertex = VertexCache.get(key);
+        Vertex vertex = VertexCache.get(value);
         if (vertex == null){
-            Optional<Vertex> optionalVertex = g.V().hasLabel(label).has(key, value).tryNext();
-            if (optionalVertex.isPresent()){
-                vertex = optionalVertex.get();
-                VertexCache.put(key,vertex);
-            }
+//            Optional<Vertex> optionalVertex = g.V().hasLabel(label).has(key, value).tryNext();
+//            if (optionalVertex.isPresent()){
+//                vertex = optionalVertex.get();
+//                VertexCache.put(value,vertex);
+//            }
         }
 
        return vertex;
@@ -77,14 +77,14 @@ public class AirGraphDataTx implements GraphData<AirBO> {
         String key = data.getSfzh()+"_"+data.getFlightNo()+"_"+data.getFlightDay();
         Vertex vertex = VertexCache.get(key);
         if (vertex == null){
-            Optional<Vertex> vertexOptional = g.V().hasLabel(label)
-                .has(AirSchemaFactory.SFZH_PROPERTY, data.getSfzh())
-                .has(AirSchemaFactory.FLIGHTNO_PROPERTY, data.getFlightNo())
-                .has(AirSchemaFactory.FLIGHTDAY_PROPERTY, data.getFlightDate()).tryNext();
-            if (vertexOptional.isPresent()){
-                vertex = vertexOptional.get();
-                VertexCache.put(key,vertex);
-            }
+//            Optional<Vertex> vertexOptional = g.V().hasLabel(label)
+//                .has(AirSchemaFactory.SFZH_PROPERTY, data.getSfzh())
+//                .has(AirSchemaFactory.FLIGHTNO_PROPERTY, data.getFlightNo())
+//                .has(AirSchemaFactory.FLIGHTDAY_PROPERTY, data.getFlightDate()).tryNext();
+//            if (vertexOptional.isPresent()){
+//                vertex = vertexOptional.get();
+//                VertexCache.put(key,vertex);
+//            }
         }
         return vertex;
     }

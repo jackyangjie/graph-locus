@@ -1,11 +1,10 @@
 package com.trs.locus.loaddata;
 
 import com.trs.locus.DateUtil;
-import com.trs.locus.airplane.AirSchemaFactory;
-import com.trs.locus.bo.AirBO;
+import com.trs.locus.business.airplane.AirSchemaFactory;
+import com.trs.locus.business.airplane.bo.AirBO;
+import com.trs.locus.business.stay.bo.StayBO;
 import com.trs.locus.metadata.TrsGraphFactory;
-import com.trs.locus.metadata.TrsGraphSchemaFactory;
-import org.apache.tinkerpop.gremlin.process.traversal.dsl.graph.GraphTraversal;
 import org.apache.tinkerpop.gremlin.process.traversal.dsl.graph.GraphTraversalSource;
 import org.apache.tinkerpop.gremlin.structure.Vertex;
 import org.janusgraph.core.JanusGraph;
@@ -14,6 +13,7 @@ import org.junit.Test;
 
 import java.io.IOException;
 import java.util.List;
+import java.util.function.Function;
 
 /**
  * @Description
@@ -27,7 +27,7 @@ public class CsvReadDataTest {
     @Ignore
     public void readTest() throws IOException {
         String pathName = "C:\\Users\\71908\\Desktop\\数据库导出 .txt";
-        ReadData<AirBO> csvReadData = new CsvReadDataIterator(pathName);
+        ReadData<AirBO> csvReadData = new CsvReadDataIterator(pathName,null);
         while (csvReadData.hasNext()){
             AirBO next = csvReadData.next();
             System.out.println(next.getId());
@@ -35,8 +35,21 @@ public class CsvReadDataTest {
     }
     @Test
     public void dateUtil(){
-        String str = "2011/12/04";
-        System.out.println(DateUtil.stringToDate(str));
+//        String str = "2011/12/04";
+        String str = "201407160218";
+        System.out.println(DateUtil.stringToDate2(str));
+    }
+
+
+    @Test
+    public void test(){
+        String pathName = "C:\\Users\\71908\\Desktop\\stay.txt";
+        Function<String, StayBO> conversion = (String line) -> StayBO.toStay(line);
+        ReadData<StayBO> csvReadData = new CsvReadDataIterator(pathName,conversion);
+        while (csvReadData.hasNext()){
+            StayBO next = csvReadData.next();
+            System.out.println(next.getName());
+        }
     }
 
     @Test

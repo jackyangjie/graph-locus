@@ -1,6 +1,7 @@
 package com.trs.locus.core;
 
 import org.apache.tinkerpop.gremlin.process.traversal.dsl.graph.GraphTraversalSource;
+import org.apache.tinkerpop.gremlin.structure.Graph;
 import org.janusgraph.core.JanusGraph;
 
 import java.util.List;
@@ -14,5 +15,5 @@ public interface GraphDataBuilder<T> {
 
     GraphData builder(GraphTraversalSource traversal);
 
-    Runnable builder(JanusGraph graph, List<T> data);
+    Runnable builder(Graph graph, List<T> data);
 }

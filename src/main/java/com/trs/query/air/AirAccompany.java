@@ -61,6 +61,7 @@ public class AirAccompany {
                 "filter(select(values).unfold().is(gte(2)))";
         String filter = airs.stream()
                 .map(p -> "has('property.flightNo','" + p.getKey() + "').has('property.flightDay',new Date(" + p.getValue().getTime() + "))")
+//                .map(p -> "and(has('property.flightNo','" + p.getKey() + "').has('property.flightDay',new Date(" + p.getValue().getTime() + ")))")
                 .collect(Collectors.joining(","));
         dsl = String.format(dsl,filter);
         return dsl;
@@ -73,6 +74,6 @@ public class AirAccompany {
 
     public static void main(String[] args) {
         AirAccompany airAccompany = new AirAccompany();
-        airAccompany.computerAirAccompany("142112198714131312");
+        airAccompany.computerAirAccompany("41312919661111211X");
     }
 }

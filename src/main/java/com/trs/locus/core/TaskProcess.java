@@ -53,7 +53,6 @@ public class TaskProcess {
         JanusGraph graphInstance = TrsGraphFactory.getGraphInstance();
         GraphTraversalSource traversal = graphInstance.traversal();
         GraphData graphData =  graphDataBuilder.builder(traversal);
-        Transaction tx = traversal.tx();
 
         long count = 0;
         Instant start = Instant.now();
@@ -61,22 +60,23 @@ public class TaskProcess {
             Object data = readData.next();
             count ++;
             try {
+                if (data == null) {continue;}
                 graphData.createGraphElement(data);
             } catch (Exception e) {
                 log.info("当前错误的数据:{}",data);
                 e.printStackTrace();
             }
             if (count % TX_BATCH_SIZE == 0){
-                tx.commit();
-                tx = traversal.tx();
+                 traversal.tx().commit();
                 Instant end = Instant.now();
                 log.info("当前已经写入的数据量："+count +" ，用时:"+ Duration.between(start,end).toMillis() +"毫秒");
                 start = end;
-//                graphData = null;
+                traversal = graphInstance.traversal();
+                graphData =  graphDataBuilder.builder(traversal);
             }
         }
         if (graphData != null ){
-            tx.commit();
+            traversal.tx().commit();
             log.info("当前已经写入的数据量："+count +" ，用时:"+ Duration.between(start,Instant.now()).toMillis() +"毫秒");
         }
     }

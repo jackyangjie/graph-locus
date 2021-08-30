@@ -4,6 +4,7 @@ import com.trs.locus.business.airplane.bo.AirBO;
 import com.trs.locus.core.GraphData;
 import com.trs.locus.core.GraphDataBuilder;
 import org.apache.tinkerpop.gremlin.process.traversal.dsl.graph.GraphTraversalSource;
+import org.apache.tinkerpop.gremlin.structure.Graph;
 import org.janusgraph.core.JanusGraph;
 
 import java.util.List;
@@ -21,7 +22,7 @@ public class TrsAirGraphDataBuilder implements GraphDataBuilder<AirBO> {
     }
 
     @Override
-    public Runnable builder(JanusGraph graph, List<AirBO> data) {
+    public Runnable builder(Graph graph, List<AirBO> data) {
         return null;
     }
 

@@ -1,6 +1,6 @@
-package com.trs.locus.business.airplane;
+package com.trs.locus.business.stay;
 
-import com.trs.locus.business.airplane.bo.AirBO;
+import com.trs.locus.business.stay.bo.StayBO;
 import com.trs.locus.core.GraphData;
 import com.trs.locus.core.GraphDataBuilder;
 import org.apache.tinkerpop.gremlin.process.traversal.dsl.graph.GraphTraversalSource;
@@ -11,20 +11,18 @@ import java.util.List;
 
 /**
  * @Description
- * @DATE 2021.8.16 10:26
+ * @DATE 2021.8.24 17:28
  * @Author yangjie
  **/
 
-public class AirGraphDataBuilder implements GraphDataBuilder<AirBO> {
+public class StayGraphDataBuilder implements GraphDataBuilder<StayBO> {
     @Override
     public GraphData builder(GraphTraversalSource traversal) {
-        return new AirGraphDataTx(traversal);
+        return new StayGraphDataTx(traversal);
     }
 
     @Override
-    public Runnable builder(Graph graph, List<AirBO> data) {
-        return new AirGraphDataTask(graph,data);
+    public Runnable builder(Graph graph, List<StayBO> data) {
+        return null;
     }
-
-
 }

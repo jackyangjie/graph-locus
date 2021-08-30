@@ -3,6 +3,7 @@ package com.trs.locus.business.airplane;
 import com.trs.locus.business.airplane.bo.AirBO;
 import com.trs.locus.cache.VertexCache;
 import org.apache.tinkerpop.gremlin.process.traversal.dsl.graph.GraphTraversalSource;
+import org.apache.tinkerpop.gremlin.structure.Graph;
 import org.apache.tinkerpop.gremlin.structure.Vertex;
 import org.janusgraph.core.JanusGraph;
 import org.janusgraph.core.JanusGraphTransaction;
@@ -25,10 +26,10 @@ public  class AirGraphDataTask implements Runnable{
     private static final Logger log = LoggerFactory.getLogger(AirGraphDataTask.class);
         private GraphTraversalSource g;
         private List<AirBO> datas;
-        private JanusGraph graphInstance;
+        private Graph threadTx;
 
-        public AirGraphDataTask(JanusGraph graphInstance, List<AirBO> datas) {
-            this.graphInstance = graphInstance;
+        public AirGraphDataTask(Graph threadTx, List<AirBO> datas) {
+            this.threadTx = threadTx;
             this.datas = datas;
         }
 
@@ -36,8 +37,7 @@ public  class AirGraphDataTask implements Runnable{
         public void run() {
             try {
                 Instant now = Instant.now();
-                JanusGraphTransaction newTransaction = graphInstance.newTransaction();
-                g = newTransaction.traversal();
+                g = threadTx.traversal();
                 for (AirBO data : datas) {
                     Vertex personV = query(AirSchemaFactory.PERSON_LABEL_V, AirSchemaFactory.SFZH_PROPERTY, data.getSfzh());
                     if(personV == null){
@@ -70,8 +70,7 @@ public  class AirGraphDataTask implements Runnable{
 //                    Edge edge1 = cjV.addEdge(AirSchemaFactory.SIMPLE_LABEL_E, airPlanV);
                 }
 
-                g.tx().commit();
-                log.info("当事务{}，提交耗时：{}毫秒",g.tx().hashCode(), Duration.between(now,Instant.now()).toMillis());
+//                g.tx().commit();
             } catch (Exception e) {
                 e.printStackTrace();
             }
@@ -79,11 +78,11 @@ public  class AirGraphDataTask implements Runnable{
         private Vertex query(String label,String key,String value){
             Vertex vertex = VertexCache.get(value);
             if (vertex == null){
-                Optional<Vertex> optionalVertex = g.V().hasLabel(label).has(key, value).tryNext();
-                if (optionalVertex.isPresent()){
-                    vertex = optionalVertex.get();
-                    VertexCache.put(value,vertex);
-                }
+//                Optional<Vertex> optionalVertex = g.V().hasLabel(label).has(key, value).tryNext();
+//                if (optionalVertex.isPresent()){
+//                    vertex = optionalVertex.get();
+//                    VertexCache.put(value,vertex);
+//                }
             }
             return vertex;
         }
@@ -93,14 +92,14 @@ public  class AirGraphDataTask implements Runnable{
             String key = data.getSfzh()+"_"+data.getFlightNo()+"_"+data.getFlightDay();
             Vertex vertex = VertexCache.get(key);
             if (vertex == null){
-                Optional<Vertex> vertexOptional = g.V().hasLabel(label)
-                        .has(AirSchemaFactory.SFZH_PROPERTY, data.getSfzh())
-                        .has(AirSchemaFactory.FLIGHTNO_PROPERTY, data.getFlightNo())
-                        .has(AirSchemaFactory.FLIGHTDAY_PROPERTY, data.getFlightDate()).tryNext();
-                if (vertexOptional.isPresent()){
-                    vertex = vertexOptional.get();
-                    VertexCache.put(key,vertex);
-                }
+//                Optional<Vertex> vertexOptional = g.V().hasLabel(label)
+//                        .has(AirSchemaFactory.SFZH_PROPERTY, data.getSfzh())
+//                        .has(AirSchemaFactory.FLIGHTNO_PROPERTY, data.getFlightNo())
+//                        .has(AirSchemaFactory.FLIGHTDAY_PROPERTY, data.getFlightDate()).tryNext();
+//                if (vertexOptional.isPresent()){
+//                    vertex = vertexOptional.get();
+//                    VertexCache.put(key,vertex);
+//                }
             }
             return vertex;
         }
